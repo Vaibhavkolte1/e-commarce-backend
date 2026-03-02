@@ -40,10 +40,10 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie.from("jwt", registerResponseDto.getJwt())
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .path("/")
                 .maxAge(Duration.ofDays(7))
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
