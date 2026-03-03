@@ -78,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
         if(dto.getRole().equals("SELLER")) {
             assignRole = Role.SELLER;
         } else {
-            assignRole = Role.USER;
+            assignRole = Role.ADMIN;
         }
 
         User newUser = User.builder()
