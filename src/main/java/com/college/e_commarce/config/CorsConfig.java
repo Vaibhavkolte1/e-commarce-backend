@@ -16,7 +16,8 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); // Allow cookies
         config.setAllowedOrigins(List.of("http://localhost:5173",
-                                        "https://clg-final-project-vaibhavs-projects-a019b67a.vercel.app/")); // Your frontend
+                                        "https://clg-final-project-vaibhavs-projects-a019b67a.vercel.app/",
+                                        "https://**")); // Your frontend
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Set-Cookie")); // Expose cookies to frontend
