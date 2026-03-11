@@ -1,9 +1,6 @@
 package com.college.e_commarce.service;
 
-import com.college.e_commarce.dto.CartProductDto;
-import com.college.e_commarce.dto.OrderDto;
-import com.college.e_commarce.dto.OrderListDto;
-import com.college.e_commarce.dto.OrderProductDto;
+import com.college.e_commarce.dto.*;
 
 public interface OrderService {
 
@@ -14,4 +11,6 @@ public interface OrderService {
     OrderDto getOrder(Long id);
 
     void cancelOrder(Long id);
+
+    void payment(PaymentRequestDto dto);
 }

@@ -52,4 +52,7 @@ public class Order {
     )
     private User buyer;
 
+    @OneToOne(mappedBy = "orderId", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Payment payment;
+
 }

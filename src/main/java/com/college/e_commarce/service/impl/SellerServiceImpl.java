@@ -4,10 +4,13 @@ import com.college.e_commarce.dto.ProductCreateDto;
 import com.college.e_commarce.dto.ProductResponseDto;
 import com.college.e_commarce.entity.Product;
 import com.college.e_commarce.entity.User;
+import com.college.e_commarce.repository.CartProductRepository;
+import com.college.e_commarce.repository.OrderRepository;
 import com.college.e_commarce.repository.ProductRepository;
-import com.college.e_commarce.repository.UserRepository;
 import com.college.e_commarce.service.SellerService;
 import com.college.e_commarce.util.AuthUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +23,11 @@ import java.util.List;
 public class SellerServiceImpl implements SellerService {
 
     private final ProductRepository productRepository;
+    private final CartProductRepository cartProductRepository;
+    private final OrderRepository orderRepository;
     private final AuthUtil authUtil;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public List<ProductResponseDto> getAllMyProducts() {
@@ -78,19 +85,28 @@ public class SellerServiceImpl implements SellerService {
                 .build();
     }
 
-    @Override
     @Transactional
+    @Override
     public void deleteProductById(Long productId) {
+
         User currentUser = authUtil.getCurrentUser();
 
         Product product = productRepository.findById(productId)
-                .orElseThrow((() -> new RuntimeException("product not found")));
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        if(!product.getSeller().getEmail().equals(currentUser.getEmail())) {
-            throw new RuntimeException("Unauthorised seller");
+        if (!product.getSeller().getEmail().equals(currentUser.getEmail())) {
+            throw new RuntimeException("Unauthorized seller");
         }
 
-        productRepository.deleteById(productId);
+        // remove references
+        cartProductRepository.deleteByProductId(productId);
+        orderRepository.deleteByProductId(productId);
+
+        entityManager.flush();
+        entityManager.clear();   // ⭐ important
+
+        // delete product
+        productRepository.delete(product);
     }
 
 }

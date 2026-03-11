@@ -3,11 +3,13 @@ package com.college.e_commarce.service.impl;
 import com.college.e_commarce.dto.OrderDto;
 import com.college.e_commarce.dto.OrderListDto;
 import com.college.e_commarce.dto.OrderProductDto;
+import com.college.e_commarce.dto.PaymentRequestDto;
 import com.college.e_commarce.entity.*;
 import com.college.e_commarce.enums.Status;
 import com.college.e_commarce.repository.CartProductRepository;
 import com.college.e_commarce.repository.CartRepository;
 import com.college.e_commarce.repository.OrderRepository;
+import com.college.e_commarce.repository.PaymentRepository;
 import com.college.e_commarce.service.OrderService;
 import com.college.e_commarce.util.AuthUtil;
 import jakarta.transaction.Transactional;
@@ -25,6 +27,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final CartProductRepository cartProductRepository;
+    private final PaymentRepository paymentRepository;
     private final AuthUtil authUtil;
 
     @Override
@@ -114,5 +117,25 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         orderRepository.delete(myOrder);
+    }
+
+    @Override
+    @Transactional
+    public void payment(PaymentRequestDto dto) {
+        Order order = orderRepository.findById(dto.getOrderId())
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        Payment payment = Payment.builder()
+                .orderId(order)
+                .paymentMethod(dto.getPaymentMethod())
+                .status("Paid")
+                .amount(order.getTotalAmount())
+                .paymentDate(LocalDateTime.now())
+                .build();
+
+        paymentRepository.save(payment);
+
+        order.setPaymentStatus(Status.DONE);
+
     }
 }

@@ -1,10 +1,7 @@
 package com.college.e_commarce.controller;
 
 
-import com.college.e_commarce.dto.CartProductDto;
-import com.college.e_commarce.dto.OrderDto;
-import com.college.e_commarce.dto.OrderListDto;
-import com.college.e_commarce.dto.OrderProductDto;
+import com.college.e_commarce.dto.*;
 import com.college.e_commarce.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +34,11 @@ public class OrderController {
     public ResponseEntity<String> cancelOrder(@PathVariable Long id) {
         orderService.cancelOrder(id);
         return ResponseEntity.ok("Order was canceled.");
+    }
+
+    @PostMapping("/payment")
+    public ResponseEntity<String> payment(@Valid @RequestBody PaymentRequestDto paymentRequestDto) {
+        orderService.payment(paymentRequestDto);
+        return ResponseEntity.ok("Payment Done.");
     }
 }

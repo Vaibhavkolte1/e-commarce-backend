@@ -51,11 +51,11 @@ public class Product {
     @ToString.Exclude
     private User seller;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product")
     @ToString.Exclude
     private List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product")
     @ToString.Exclude
     private List<CartProduct> cartProducts = new ArrayList<>();
 }

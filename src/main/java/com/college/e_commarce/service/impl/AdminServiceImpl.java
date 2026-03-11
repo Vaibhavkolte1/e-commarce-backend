@@ -7,9 +7,13 @@ import com.college.e_commarce.entity.User;
 import com.college.e_commarce.enums.Role;
 import com.college.e_commarce.enums.UserStatus;
 import com.college.e_commarce.repository.CartProductRepository;
+import com.college.e_commarce.repository.OrderRepository;
 import com.college.e_commarce.repository.ProductRepository;
 import com.college.e_commarce.repository.UserRepository;
 import com.college.e_commarce.service.AdminService;
+import com.college.e_commarce.util.AuthUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,10 @@ public class AdminServiceImpl implements AdminService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CartProductRepository cartProductRepository;
+    private final OrderRepository orderRepository;
+    private final AuthUtil authUtil;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public List<UsersResponseDto> getAllUsers() {
@@ -79,14 +87,23 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-    @Override
     @Transactional
+    @Override
     public void deleteProductById(Long productId) {
+
+        User currentUser = authUtil.getCurrentUser();
+
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found by id: " + productId));
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
+        // remove references
         cartProductRepository.deleteByProductId(productId);
+        orderRepository.deleteByProductId(productId);
 
-        productRepository.deleteById(productId);
+        entityManager.flush();
+        entityManager.clear();   // ⭐ important
+
+        // delete product
+        productRepository.delete(product);
     }
 }
