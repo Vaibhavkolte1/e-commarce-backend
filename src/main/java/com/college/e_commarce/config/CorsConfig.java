@@ -16,10 +16,11 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); // Allow cookies
         config.setAllowedOrigins(List.of(
-                "http://localhost:5173",
-                "http://127.0.0.1:5173",
-                "https://*.vercel.app",
-                "*"
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "https://clg-final-project-vaibhavs-projects-a019b67a.vercel.app/",
+            "https://*.vercel.app",
+            "*"
         )); // Your frontend
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
