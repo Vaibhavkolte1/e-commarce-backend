@@ -16,9 +16,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${JWT.SECRET}")
-    private static final String SECRET_KEY =
-            "ZmFrZXNlY3JldGtleWZvcmRlbW9wdXJwb3NlMTIzNDU2Nzg5MDEyMzQ1Ng==";
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
 
     // 🔐 Generate Token (e.g. 7 days)
     public String generateToken(UserDetails userDetails) {
