@@ -9,6 +9,8 @@ import com.college.e_commarce.repository.UserRepository;
 import com.college.e_commarce.service.ProductService;
 import com.college.e_commarce.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -85,10 +87,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponseDto> getAllProducts() {
+    public Page<ProductResponseDto> getAllProducts(Pageable pageable) {
 
-        return productRepository.findAll()
-                .stream()
+        return productRepository.findAll(pageable)
                 .map(product -> ProductResponseDto.builder()
                         .id(product.getId())
                         .name(product.getName())
@@ -101,8 +102,7 @@ public class ProductServiceImpl implements ProductService {
                         .noOfReview(product.getNoOfReview())
                         .totalRatings(product.getTotalRatings())
                         .build()
-                )
-                .toList();
+                );
     }
 
 }

@@ -1,12 +1,11 @@
 package com.college.e_commarce.controller;
 
-import com.college.e_commarce.dto.ProductCreateDto;
 import com.college.e_commarce.dto.ProductResponseDto;
 import com.college.e_commarce.service.ProductService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,8 +33,8 @@ public class ProductController {
     }
 
     @GetMapping("/get-all")
-    public List<ProductResponseDto> getAllProducts() {
-        return productService.getAllProducts();
+    public Page<ProductResponseDto> getAllProducts(Pageable pageable) {
+        return productService.getAllProducts(pageable);
     }
 
 }
